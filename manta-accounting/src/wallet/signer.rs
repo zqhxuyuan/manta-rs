@@ -1457,6 +1457,14 @@ where
                 .collect(),
         )
     }
+
+    #[inline]
+    pub fn sign_tx(&mut self, transaction: Transaction<C>) -> TransactionDataResponse<C> {
+        let result = self.sign_internal(transaction).unwrap();
+        let response = Self.batched_transaction_data(result.posts);
+        self.state.utxo_accumulator.rollback();
+        response
+    }
 }
 
 impl<C> Connection<C> for Signer<C>
