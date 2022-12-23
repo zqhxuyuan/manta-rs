@@ -1458,10 +1458,11 @@ where
         )
     }
 
+    ///
     #[inline]
     pub fn sign_tx(&mut self, transaction: Transaction<C>) -> TransactionDataResponse<C> {
         let result = self.sign_internal(transaction).unwrap();
-        let response = Self.batched_transaction_data(result.posts);
+        let response = self.batched_transaction_data(result.posts);
         self.state.utxo_accumulator.rollback();
         response
     }
@@ -1511,10 +1512,11 @@ where
         &mut self,
         request: SignRequest<C>,
     ) -> LocalBoxFutureResult<TransactionDataResponse<C>, Self::Error> {
-        let sign = self.sign(request.transaction).unwrap();
-        Box::pin(async move {
-            let posts = sign.posts;
-            Ok(self.batched_transaction_data(posts))
-        })
+        // let sign = self.sign(request.transaction).unwrap();
+        // Box::pin(async move {
+        //     let posts = sign.posts;
+        //     Ok(self.batched_transaction_data(posts))
+        // })
+        Box::pin(async move { Ok(self.sign_tx(request.transaction)) })
     }
 }
