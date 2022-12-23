@@ -387,6 +387,25 @@ where
             .map_err(Error::SignError)
     }
 
+    ///
+    #[inline]
+    pub async fn sign_tx(
+        &mut self,
+        transaction: Transaction<C>,
+        metadata: Option<AssetMetadata>,
+    ) -> Result<TransactionDataResponse<C>, Error<C, L, S>> {
+        self.check(&transaction)
+            .map_err(Error::InsufficientBalance)?;
+        self.signer
+            .sign_tx(SignRequest {
+                transaction,
+                metadata,
+            })
+            .await
+            .map_err(Error::SignerConnectionError)
+        // .map_err(Error::SignError)
+    }
+
     /// Attempts to process TransferPosts and returns the corresponding TransactionData.
     #[inline]
     pub async fn transaction_data(
