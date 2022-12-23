@@ -158,4 +158,11 @@ impl signer::Connection<Config> for Client {
     ) -> LocalBoxFutureResult<TransactionDataResponse, Self::Error> {
         Box::pin(async move { self.send("transaction_data", request).await })
     }
+
+    fn sign_tx(
+        &mut self,
+        request: signer::SignRequest<Config>,
+    ) -> LocalBoxFutureResult<signer::TransactionDataResponse<Config>, Self::Error> {
+        Box::pin(async move { self.send("sign_tx", request).await })
+    }
 }

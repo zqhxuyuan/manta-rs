@@ -64,7 +64,7 @@ pub trait ProofSystem {
     type Proof;
 
     /// Error Type
-    type Error;
+    type Error: core::fmt::Debug;
 
     /// Returns a compiler which is setup to build proving and verifying contexts.
     #[must_use]

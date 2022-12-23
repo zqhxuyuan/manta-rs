@@ -96,6 +96,12 @@ where
         &mut self,
         request: TransactionDataRequest<C>,
     ) -> LocalBoxFutureResult<TransactionDataResponse<C>, Self::Error>;
+
+    /// Signs a transaction and returns the ledger transfer posts if successful.
+    fn sign_tx(
+        &mut self,
+        request: SignRequest<C>,
+    ) -> LocalBoxFutureResult<TransactionDataResponse<C>, Self::Error>;
 }
 
 /// Signer Synchronization Data
@@ -1490,5 +1496,17 @@ where
         request: TransactionDataRequest<C>,
     ) -> LocalBoxFutureResult<TransactionDataResponse<C>, Self::Error> {
         Box::pin(async move { Ok(self.batched_transaction_data(request.0)) })
+    }
+
+    #[inline]
+    fn sign_tx(
+        &mut self,
+        request: SignRequest<C>,
+    ) -> LocalBoxFutureResult<TransactionDataResponse<C>, Self::Error> {
+        let sign = self.sign(request.transaction).unwrap();
+        Box::pin(async move {
+            let posts = sign.posts;
+            Ok(self.batched_transaction_data(posts))
+        })
     }
 }

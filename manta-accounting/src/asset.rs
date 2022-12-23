@@ -75,8 +75,10 @@ use std::{
     derive(Deserialize, Serialize),
     serde(crate = "manta_util::serde", deny_unknown_fields)
 )]
-#[derive(derivative::Derivative, Display, From)]
-#[derivative(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(derivative::Derivative)]
+// #[derivative(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Display, Default, From, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derivative(Debug(bound = "I: Debug, V: Debug"))]
 #[display(fmt = "{{id: {}, value: {}}}", id, value)]
 pub struct Asset<I, V> {
     /// Asset Id
